@@ -253,16 +253,20 @@ export default function Layout({ children }) {
                     <li className="nav-header">Dashboard</li>
 
                     <li className="nav-item">
-                      <a href="/" className="nav-link">
-                        <i className="nav-icon fas fa-home"></i>
-                        <p>Home</p>
-                      </a>
+                      <Link href="/">
+                        <a className="nav-link">
+                          <i className="nav-icon fas fa-home"></i>
+                          <p>Home</p>
+                        </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="/" className="nav-link">
-                        <i className="nav-icon fas fa-microphone"></i>
-                        <p>Lives</p>
-                      </a>
+                      <Link href="lives">
+                        <a className="nav-link">
+                          <i className="nav-icon fas fa-microphone"></i>
+                          <p>Lives</p>
+                        </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
                       <Link href="video-upload">
