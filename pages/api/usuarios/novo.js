@@ -12,21 +12,19 @@ async function handler(req, res) {
 
   const client = await clientPromise;
 
-  const db = client.db("aef");
+  const db = client.db("ccnetwork");
 
-  const existingUser = await db
-    .collection("usuarios")
-    .findOne({ email: email });
+  const existingUser = await db.collection("users").findOne({ email: email });
 
   if (existingUser) {
     res.status(422).json({ message: "usuarioexiste" });
     return;
   }
 
-  const userpassword = "aefangola2023";
+  const userpassword = "ccnetwork2023";
   const hashedPassword = await hashPassword(userpassword);
 
-  const response = await db.collection("usuarios").insertOne({
+  const response = await db.collection("users").insertOne({
     email: email,
     password: hashedPassword,
     cargo: cargo,

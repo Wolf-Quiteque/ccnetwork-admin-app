@@ -457,17 +457,14 @@ export default function Home() {
           </div>
         </div>
         <div className="row mt-3">
-          <div className="col-12 col-sm-6 col-md-3">
+          <div className="col-12 col-md-12">
             <div className="info-box">
               <span className="info-box-icon bg-info elevation-1">
-                <i className="fas fa-cog"></i>
+                <i className="fa fa-cloud-download-alt"></i>
               </span>
               <div className="info-box-content">
                 <span className="info-box-text">Downloads</span>
-                <span className="info-box-number">
-                  10
-                  <small>%</small>
-                </span>
+                <span className="info-box-number">0</span>
               </div>
             </div>
           </div>
@@ -479,7 +476,7 @@ export default function Home() {
               </span>
               <div className="info-box-content">
                 <span className="info-box-text">Screen Time</span>
-                <span className="info-box-number">41,410</span>
+                <span className="info-box-number">0</span>
               </div>
             </div>
           </div>
@@ -492,7 +489,7 @@ export default function Home() {
               </span>
               <div className="info-box-content">
                 <span className="info-box-text">Sales</span>
-                <span className="info-box-number">760</span>
+                <span className="info-box-number">0</span>
               </div>
             </div>
           </div>
@@ -504,7 +501,7 @@ export default function Home() {
               </span>
               <div className="info-box-content">
                 <span className="info-box-text">New Users</span>
-                <span className="info-box-number">2,000</span>
+                <span className="info-box-number">0</span>
               </div>
             </div>
           </div>
