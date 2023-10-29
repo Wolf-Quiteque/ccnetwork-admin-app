@@ -96,40 +96,7 @@ export default function GestaoUsuarios() {
   };
 
   const Cadastrar = async () => {
-    toaststate = toast.loading("aguarde...", { closeOnClick: true });
-    setloading(true);
-
-    try {
-      const res = await fetch("/api/usuarios/novo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email.toLowerCase(),
-          cargo: cargo,
-          nome: nome,
-        }),
-      });
-      const data = await res.json();
-      toast.update(toaststate, {
-        render: data.message,
-        type: "success",
-        isLoading: false,
-        closeOnClick: true,
-        autoClose: false,
-      });
-    } catch (err) {
-      const data = await res.json();
-      toast.update(toaststate, {
-        render: data.message,
-        type: "error",
-        isLoading: false,
-        closeOnClick: true,
-        autoClose: false,
-      });
-    }
-
+  
     const data = await res.json();
     toast.update(toaststate, {
       render: data.message,
