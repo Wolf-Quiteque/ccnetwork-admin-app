@@ -12,7 +12,7 @@ async function handler(req, res) {
   const db = client.db("ccnetwork");
   const response = await db.collection("videos").insertOne(data);
 
-  res.status(200)
+  res.status(200).json({msg:"uploaded"});
 }
 
 export default handler;
