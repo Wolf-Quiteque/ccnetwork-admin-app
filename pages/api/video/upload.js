@@ -11,8 +11,8 @@ async function handler(req, res) {
   const client = await clientPromise;
   const db = client.db("ccnetwork");
   const response = await db.collection("videos").insertOne(data);
-console.log("2")
-  res.status(200).json("Video Uploaded");
+
+  res.status(200)
 }
 
 export default handler;

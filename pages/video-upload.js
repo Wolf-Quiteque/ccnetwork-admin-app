@@ -97,18 +97,17 @@ export default function Dummy() {
   
 
   data.imgurl= result.secure_url;
-  data.videourl =resultVideo.datasecure_url
+  data.videourl =resultVideo.data.secure_url
   data.channel = "main"
   data.date= Date.now();
 
-      const res = await fetch("/api/video/upload", {
+      await fetch("/api/video/upload", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-      const dataa = await res.json();
 
 
     toast.update(toaststate, {
@@ -124,6 +123,7 @@ export default function Dummy() {
     setloading(false)
     setVideoselected(null)
     setcategories(null)
+    setcategoryArray([])
   }
 
   const Addcategory = async () =>{
