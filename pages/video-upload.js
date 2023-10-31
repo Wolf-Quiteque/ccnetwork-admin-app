@@ -28,6 +28,22 @@ export default function Dummy() {
   const [imgselected, setimgselected] = useState();
   const [videoselected, setVideoselected] = useState();
   const [categorynamme, setcategorynamme] = useState("");
+  const [allcat, setallcat] = useState([]);
+  const [maincat, setmaincat] = useState("");
+
+
+
+  const Getcategories = async () => {
+    const res = await fetch("/api/video/category/all", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    setallcat(data);
+    setmaincat(data[0].name)
+  };
 
   
   useEffect(() => {
@@ -38,69 +54,56 @@ export default function Dummy() {
 
 
   const Uploaddata = async () => {
-
-    let toaststate = null; 
+    let toaststate = null;
     setloading(true);
-
+  
     const createProgressToast = () => {
       toaststate = toast(<div>Uploading... 0%</div>, { closeOnClick: true, autoClose: false });
     };
   
-    createProgressToast(); 
-
+    createProgressToast();
   
-    
-    var data = {
-      title:title,
-      description:description,
-      categories:categoryArray
-    }
-    
-    
-    const Imgdata = new FormData();
-    const fileName = Date.now() + file.name;
-    Imgdata.append("file", file);
-    Imgdata.append("name", fileName);
-    Imgdata.append("upload_preset", "ipo-uploads");
-
-    const result = await fetch(
-      "https://api.cloudinary.com/v1_1/quitopia/image/upload",
-      {
-        method: "Post",
-        body: Imgdata,
-      }
-    ).then((r) => r.json());
-
-    const formvideodata = new FormData();
-    const fileVideoName = Date.now() + video.name;
-    formvideodata.append("file", video);
-    formvideodata.append("name", fileVideoName);
-    formvideodata.append("upload_preset", "ipo-uploads");
-    const config = {
-      onUploadProgress: (progressEvent) => {
-        const loaded = progressEvent.loaded;
-        const total = progressEvent.total;
-        const progress = ((loaded / total) * 100).toFixed(1);
- toast.update(toaststate, {
-        render: <div> {progress  == (100).toFixed(1)? ("Saving data..") :(`Uploading... ${progress}%`) }</div>,
-      });
-
-        setProgress(progress);
-      },
-    };
-    
-  const resultVideo = await axios
-      .post("https://api.cloudinary.com/v1_1/quitopia/video/upload", formvideodata, config)
-      .catch((error) => {
-        console.error("Error uploading the video:", error);
+    try {
+      // Calculate timestamp once
+      const timestamp = Date.now();
+  
+      // Upload the image
+      const imgFileName = timestamp + file.name;
+      const imgFormData = new FormData();
+      imgFormData.append("file", file, imgFileName);
+      imgFormData.append("upload_preset", "ipo-uploads");
+      const imgUploadResponse = await axios.post("https://api.cloudinary.com/v1_1/quitopia/image/upload", imgFormData);
+  
+      // Upload the video in parallel
+      const videoFileName = timestamp + video.name;
+      const videoFormData = new FormData();
+      videoFormData.append("file", video, videoFileName);
+      videoFormData.append("upload_preset", "ipo-uploads");
+      const videoUploadResponse = await axios.post("https://api.cloudinary.com/v1_1/quitopia/video/upload", videoFormData, {
+        onUploadProgress: (progressEvent) => {
+          const loaded = progressEvent.loaded;
+          const total = progressEvent.total;
+          const progress = ((loaded / total) * 100).toFixed(1);
+          toast.update(toaststate, {
+            render: progress === "100.0" ? "Saving data..." : `Uploading... ${progress}%`,
+          });
+          setProgress(progress);
+        },
       });
   
-
-  data.imgurl= result.secure_url;
-  data.videourl =resultVideo.data.secure_url
-  data.channel = "main"
-  data.date= Date.now();
-
+      // Prepare data
+      const data = {
+        title: title,
+        description: description,
+        categories: categoryArray,
+        imgurl: imgUploadResponse.data.secure_url,
+        videourl: videoUploadResponse.data.secure_url,
+        channel: "main",
+        date: timestamp,
+        section:maincat
+      };
+  
+      // Send the data
       await fetch("/api/video/upload", {
         method: "POST",
         headers: {
@@ -108,23 +111,36 @@ export default function Dummy() {
         },
         body: JSON.stringify(data),
       });
-
-
-    toast.update(toaststate, {
-      render: 'Video Saved',
-      type: "success",
-      isLoading: false,
-      closeOnClick: true,
-      autoClose: false,
-    });
-    setVideo(null)
-    setimgselected(null)
-    setFile(null)
-    setloading(false)
-    setVideoselected(null)
-    setcategories(null)
-    setcategoryArray([])
-  }
+  
+      toast.update(toaststate, {
+        render: "Video Saved",
+        type: "success",
+        isLoading: false,
+        closeOnClick: true,
+        autoClose: false,
+      });
+  
+      // Reset states
+      setVideo(null);
+      setimgselected(null);
+      setFile(null);
+      setloading(false);
+      setVideoselected(null);
+      setcategories(null);
+      setcategoryArray([]);
+    } catch (error) {
+      console.error("Error in Uploaddata:", error);
+      toast.update(toaststate, {
+        render: "There has been an error",
+        type: "error",
+        isLoading: false,
+        closeOnClick: true,
+        autoClose: false,
+      });
+    }
+  };
+  
+  
 
   const Addcategory = async () =>{
     setcategories(categorynamme);
@@ -139,7 +155,19 @@ export default function Dummy() {
   }
 
 
+  useEffect(() => {
+    Getcategories();
+  }, []);
 
+
+  function Videos (){
+    return (<> <a
+      className="btn btn-success btn-sm mt-1 mr-3 float-left"
+
+    >
+     <i className="fas fa-arrow-left"></i>
+    </a></>)
+  }
 
   return (
     <div className="container">
@@ -157,8 +185,8 @@ export default function Dummy() {
       />
         <div className="row">
           <div className="col-md-12">
-
-            <h3 className="mt-3 mb-3">Video Upload</h3>
+        
+            <h3 className="mt-3 mb-3 pl-3">Video Upload</h3>
           </div>
         </div>
         <div className="mt-5 row">
@@ -263,6 +291,17 @@ export default function Dummy() {
                 settitle(e.target.value);
               }}
             />
+            <br />
+            <h5>Main Category</h5>
+            <select className="form-control" onChange={(e) => setmaincat(e.target.value)}>
+  {allcat &&
+    allcat.map((c) => (
+      <option key={c.id} value={c.name}>
+        {c.name}
+      </option>
+    ))}
+</select>
+
             <br />
             <textarea
               className="form-control"

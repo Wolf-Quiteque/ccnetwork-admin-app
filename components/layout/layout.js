@@ -269,13 +269,31 @@ export default function Layout({ children }) {
                       </Link>
                     </li>
                     <li className="nav-item">
-                      <Link href="video-upload">
+                      <Link href="category">
+                        <a className="nav-link">
+                          <i className="nav-icon fa fa-paperclip"></i>
+                          <p>Category</p>
+                        </a>
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link href="videos">
                         <a className="nav-link">
                           <i className="nav-icon fas fa-video"></i>
                           <p>Videos</p>
                         </a>
                       </Link>
                     </li>
+
+                    <li className="nav-item">
+                      <Link href="video-upload">
+                        <a className="nav-link">
+                          <i className="nav-icon fas fa-plus"></i>
+                          <p>Add Videos</p>
+                        </a>
+                      </Link>
+                    </li>
+                    
                     {/* <li className="nav-item">
                       <Link href="/gestao-usuarios">
                         <a className="nav-link">

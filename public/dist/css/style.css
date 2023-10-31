@@ -71,3 +71,11 @@ div.overflowing-left {
   position: sticky;
   top: 0;
 }
+
+.hide {
+  display: none;
+}
+
+.card:hover .hide {
+  display: block;
+}
